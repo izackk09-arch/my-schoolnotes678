@@ -233,59 +233,30 @@ container.appendChild(div);
 });
 }
 
-// ---------------- SECURE ADMIN SYSTEM ----------------
-let isAdmin = false;
-
-const ADMIN_PASS_HASH = -1180454017; // password: 1234
-
-function simpleHash(str){
-let h = 0;
-for(let i=0;i<str.length;i++){
-h = (h << 5) - h + str.charCodeAt(i);
-h |= 0;
-}
-return h;
-}
-
 function toggleAdmin(){
-if(isAdmin){
-closeAdmin();
-return;
+  if(isAdmin){
+    closeAdmin();
+    return;
+  }
+
+  const pass = prompt("Enter admin password:");
+
+  if(!pass){
+    alert("Wrong password");
+    return;
+  }
+
+  const cleanPass = pass.trim();
+
+  if(simpleHash(cleanPass) === ADMIN_PASS_HASH){
+    isAdmin = true;
+    document.getElementById("adminPanel").style.display = "block";
+    startAutoLogout();
+    alert("Admin access granted");
+  } else {
+    alert("Wrong password");
+  }
 }
-
-const pass = prompt("Enter admin password:");
-
-if(simpleHash(pass) === ADMIN_PASS_HASH){
-isAdmin = true;
-document.getElementById("adminPanel").style.display = "block";
-startAutoLogout();
-alert("Admin access granted");
-} else {
-alert("Wrong password");
-}
-}
-
-function closeAdmin(){
-isAdmin = false;
-document.getElementById("adminPanel").style.display = "none";
-}
-
-// auto logout
-let logoutTimer;
-
-function startAutoLogout(){
-clearTimeout(logoutTimer);
-
-logoutTimer = setTimeout(() => {
-alert("Admin session expired");
-closeAdmin();
-}, 3 * 60 * 1000);
-}
-
-document.addEventListener("click", () => {
-if(isAdmin) startAutoLogout();
-});
-
 // ---------------- ADD NOTE ----------------
 function addNoteFromUI(){
 
