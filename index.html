@@ -1,336 +1,612 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My School Notes</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>School Notes</title>
+  <style>
+    :root{
+      --bg:#f4f6f9;
+      --card:#ffffff;
+      --text:#111827;
+      --muted:#6b7280;
+      --primary:#16a34a;
+      --primary-dark:#15803d;
+      --blue:#2563eb;
+      --red:#dc2626;
+      --orange:#ea580c;
+      --border:#e5e7eb;
+      --shadow:0 8px 24px rgba(0,0,0,0.08);
+      --radius:14px;
+    }
 
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
-}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:Arial, sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      padding:20px;
+    }
 
-body{
-display:flex;
-background:#f4f6f9;
-min-height:100vh;
-}
+    h1{text-align:center;margin-bottom:18px}
+    .topbar{
+      max-width:1100px;
+      margin:0 auto 18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
 
-/* SIDEBAR */
-.sidebar{
-width:220px;
-background:#1e293b;
-padding:20px;
-color:white;
-}
+    .tabs{
+      text-align:center;
+      margin:20px 0;
+    }
 
-.sidebar h2{
-margin-bottom:30px;
-text-align:center;
-}
+    .tabs button,
+    .admin-btn,
+    .btn{
+      padding:10px 18px;
+      margin:5px;
+      font-size:15px;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+    }
 
-.menu-btn{
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border:none;
-border-radius:8px;
-background:#334155;
-color:white;
-cursor:pointer;
-font-size:16px;
-}
+    .tabs button{
+      background:#e5e7eb;
+    }
 
-.menu-btn.active{
-background:#2563eb;
-}
+    .tabs button.active{
+      background:var(--primary);
+      color:#fff;
+    }
 
-/* MAIN */
-.main{
-flex:1;
-padding:30px;
-}
+    .admin-btn{
+      background:var(--blue);
+      color:#fff;
+    }
 
-.notes-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
-margin-top:20px;
-}
+    .logout-btn{
+      background:var(--red);
+      color:#fff;
+      display:none;
+    }
 
-.note-card{
-background:white;
-padding:20px;
-border-radius:12px;
-box-shadow:0 2px 10px rgba(0,0,0,0.1);
-}
+    #content, #adminPanel{
+      max-width:1100px;
+      margin:0 auto;
+    }
 
-.open-btn{
-width:100%;
-padding:12px;
-border:none;
-border-radius:8px;
-background:#16a34a;
-color:white;
-cursor:pointer;
-font-size:16px;
-}
+    .notes-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:16px;
+      margin-top:20px;
+    }
 
-/* ADMIN BUTTON */
-#adminBtn{
-position:fixed;
-bottom:20px;
-left:20px;
-width:55px;
-height:55px;
-border-radius:50%;
-border:none;
-background:#111827;
-color:white;
-font-size:20px;
-cursor:pointer;
-z-index:999;
-}
+    .note-card{
+      background:var(--card);
+      padding:18px;
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      border:1px solid var(--border);
+    }
 
-/* LOGIN BOX */
-#loginBox{
-position:fixed;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-background:white;
-padding:20px;
-border-radius:12px;
-box-shadow:0 2px 15px rgba(0,0,0,0.2);
-display:none;
-width:250px;
-z-index:1000;
-}
+    .note-card h3{
+      margin-bottom:14px;
+      font-size:20px;
+    }
 
-#loginBox input{
-width:100%;
-padding:10px;
-margin-bottom:10px;
-border:1px solid #ccc;
-border-radius:8px;
-}
+    .open-btn{
+      width:100%;
+      padding:12px;
+      background:var(--primary);
+      color:white;
+      border:none;
+      border-radius:10px;
+      font-size:16px;
+      cursor:pointer;
+    }
 
-#loginBox button{
-width:100%;
-padding:10px;
-border:none;
-border-radius:8px;
-background:#2563eb;
-color:white;
-cursor:pointer;
-}
+    .open-btn:hover{background:var(--primary-dark)}
 
-/* ADMIN PANEL */
-#adminPanel{
-position:fixed;
-right:20px;
-bottom:90px;
-width:260px;
-background:white;
-padding:15px;
-border-radius:12px;
-box-shadow:0 2px 10px rgba(0,0,0,0.2);
-display:none;
-z-index:999;
-}
+    #modal, #loginModal{
+      display:none;
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      background:rgba(0,0,0,0.82);
+      z-index:1000;
+      padding:20px;
+    }
 
-#adminPanel input,
-#adminPanel select{
-width:100%;
-padding:8px;
-margin-bottom:8px;
-border:1px solid #ccc;
-border-radius:8px;
-}
+    #modal iframe{
+      width:90%;
+      height:90%;
+      margin:3% 5%;
+      border:none;
+      border-radius:10px;
+      background:#fff;
+    }
 
-#adminPanel button{
-width:100%;
-padding:10px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-background:#2563eb;
-color:white;
-}
+    .close-x{
+      position:absolute;
+      top:18px;
+      right:18px;
+      background:var(--red);
+      color:white;
+      border:none;
+      width:46px;
+      height:46px;
+      border-radius:50%;
+      font-size:20px;
+      cursor:pointer;
+    }
 
-@media(max-width:768px){
-body{flex-direction:column;}
-.sidebar{width:100%;display:flex;overflow:auto;gap:10px;}
-.sidebar h2{display:none;}
-}
-</style>
+    .login-box{
+      max-width:400px;
+      margin:90px auto;
+      background:#fff;
+      border-radius:16px;
+      padding:24px;
+      box-shadow:var(--shadow);
+    }
+
+    .login-box h2{
+      text-align:center;
+      margin-bottom:18px;
+    }
+
+    .form-group{
+      margin-bottom:14px;
+    }
+
+    label{
+      display:block;
+      margin-bottom:6px;
+      font-weight:bold;
+    }
+
+    input, select{
+      width:100%;
+      padding:12px;
+      border:1px solid #d1d5db;
+      border-radius:10px;
+      font-size:15px;
+      outline:none;
+    }
+
+    input:focus, select:focus{
+      border-color:var(--blue);
+    }
+
+    .btn{
+      background:var(--primary);
+      color:#fff;
+    }
+
+    .btn.secondary{
+      background:var(--blue);
+    }
+
+    .btn.danger{
+      background:var(--red);
+    }
+
+    .btn.edit{
+      background:var(--orange);
+      color:#fff;
+    }
+
+    .panel{
+      background:#fff;
+      border-radius:16px;
+      box-shadow:var(--shadow);
+      padding:20px;
+      border:1px solid var(--border);
+      margin-top:20px;
+    }
+
+    .panel h2{
+      margin-bottom:16px;
+    }
+
+    .admin-form{
+      display:grid;
+      grid-template-columns:1fr 1fr 1.4fr auto;
+      gap:12px;
+      align-items:end;
+    }
+
+    .chapter-list{
+      margin-top:24px;
+      display:grid;
+      gap:12px;
+    }
+
+    .chapter-row{
+      display:grid;
+      grid-template-columns:90px 1fr 1.4fr auto auto;
+      gap:10px;
+      align-items:center;
+      background:#f9fafb;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:12px;
+    }
+
+    .chip{
+      background:#dcfce7;
+      color:#166534;
+      padding:8px 10px;
+      border-radius:999px;
+      text-align:center;
+      font-weight:bold;
+      font-size:14px;
+    }
+
+    .small{
+      color:var(--muted);
+      font-size:14px;
+      word-break:break-all;
+    }
+
+    .hidden{display:none}
+
+    .section-title{
+      text-align:center;
+      margin-top:10px;
+      font-size:24px;
+    }
+
+    .empty{
+      text-align:center;
+      color:var(--muted);
+      margin-top:20px;
+    }
+
+    @media (max-width: 860px){
+      .admin-form{
+        grid-template-columns:1fr;
+      }
+      .chapter-row{
+        grid-template-columns:1fr;
+      }
+      .tabs button, .admin-btn, .btn{
+        width:100%;
+        margin:6px 0;
+      }
+      .topbar{
+        flex-direction:column;
+        align-items:stretch;
+      }
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="sidebar">
-<h2>CS Notes</h2>
-<button class="menu-btn active" onclick="showClass('6',this)">Class 6</button>
-<button class="menu-btn" onclick="showClass('7',this)">Class 7</button>
-<button class="menu-btn" onclick="showClass('8',this)">Class 8</button>
-</div>
+  <h1>📚 My School Notes</h1>
 
-<div class="main">
-<h1 id="title">Class 6 Notes</h1>
-<div class="notes-grid" id="notesContainer"></div>
-</div>
+  <div class="topbar">
+    <div class="tabs" id="classTabs">
+      <button onclick="showClass(6)" id="tab6">Class 6</button>
+      <button onclick="showClass(7)" id="tab7">Class 7</button>
+      <button onclick="showClass(8)" id="tab8">Class 8</button>
+    </div>
 
-<!-- ADMIN BUTTON -->
-<button id="adminBtn" onclick="openLogin()">⚙</button>
+    <div>
+      <button class="admin-btn" onclick="openLogin()">Admin Login</button>
+      <button class="admin-btn logout-btn" id="logoutBtn" onclick="logoutAdmin()">Logout</button>
+    </div>
+  </div>
 
-<!-- LOGIN BOX -->
-<div id="loginBox">
-<h3 style="margin-bottom:10px;">Admin Login</h3>
-<input type="password" id="passwordInput" placeholder="Enter password">
-<button onclick="login()">Login</button>
-</div>
+  <div id="content"></div>
 
-<!-- ADMIN PANEL -->
-<div id="adminPanel">
-<h3 style="margin-bottom:10px;">Add Note</h3>
+  <div id="adminPanel" class="hidden">
+    <div class="panel">
+      <h2>Admin Panel</h2>
 
-<select id="classInput">
-<option value="6">Class 6</option>
-<option value="7">Class 7</option>
-<option value="8">Class 8</option>
-</select>
+      <div class="admin-form">
+        <div class="form-group">
+          <label for="adminClass">Select Class</label>
+          <select id="adminClass">
+            <option value="6">Class 6</option>
+            <option value="7">Class 7</option>
+            <option value="8">Class 8</option>
+          </select>
+        </div>
 
-<input id="titleInput" placeholder="Title">
-<input id="linkInput" placeholder="Google Drive link">
+        <div class="form-group">
+          <label for="chapterTitle">Chapter Title</label>
+          <input type="text" id="chapterTitle" placeholder="e.g. Chapter 2" />
+        </div>
 
-<button onclick="addNoteFromUI()">Add Note</button>
-</div>
+        <div class="form-group">
+          <label for="chapterLink">Google Drive Preview Link</label>
+          <input type="text" id="chapterLink" placeholder="Paste preview link here" />
+        </div>
 
-<script>
+        <div class="form-group">
+          <button class="btn" id="saveBtn" onclick="saveChapter()">Add Chapter</button>
+        </div>
+      </div>
 
-let notes = JSON.parse(localStorage.getItem("notesData")) || {
-  6: [{title:"Chapter 1", file:"https://drive.google.com/file/d/1-cN3acKz1aPC5-58cfp4v7EZLv75Lc0i/view?usp=drivesdk"}],
-  7: [{title:"Chapter 1", file:"https://drive.google.com/file/d/17qyEICNyOcRLlKFOdSFANMrzE11dM7f8/view?usp=drivesdk"}],
-  8: [{title:"Chapter 1", file:"https://drive.google.com/file/d/1gPuMRcISG99RMKVh-GMH9M8IiTdy8-bU/view?usp=drivesdk"}]
-};
+      <div class="chapter-list" id="adminChapterList"></div>
+    </div>
+  </div>
 
-function saveData(){
-localStorage.setItem("notesData", JSON.stringify(notes));
-}
+  <!-- PDF Modal -->
+  <div id="modal">
+    <button class="close-x" onclick="closeModal()">✕</button>
+    <iframe id="pdf"></iframe>
+  </div>
 
-/* ---------------- NOTES ---------------- */
-function showClass(classNo, button){
+  <!-- Login Modal -->
+  <div id="loginModal">
+    <div class="login-box">
+      <h2>Admin Login</h2>
 
-document.getElementById("title").innerText = `Class ${classNo} Notes`;
+      <div class="form-group">
+        <label for="adminUser">Username</label>
+        <input type="text" id="adminUser" placeholder="Enter username" />
+      </div>
 
-document.querySelectorAll(".menu-btn").forEach(btn=>{
-btn.classList.remove("active");
-});
+      <div class="form-group">
+        <label for="adminPass">Password</label>
+        <input type="password" id="adminPass" placeholder="Enter password" />
+      </div>
 
-if(button) button.classList.add("active");
+      <button class="btn" style="width:100%" onclick="loginAdmin()">Login</button>
+      <button class="btn danger" style="width:100%;margin-top:10px" onclick="closeLogin()">Cancel</button>
+    </div>
+  </div>
 
-const container = document.getElementById("notesContainer");
-container.innerHTML = "";
+  <script>
+    const defaultNotes = {
+      6: [
+        { title: "Chapter 1", file: "https://drive.google.com/file/d/1-cN3acKz1aPC5-58cfp4v7EZLv75Lc0i/preview" }
+      ],
+      7: [
+        { title: "Chapter 1", file: "https://drive.google.com/file/d/17qyEICNyOcRLlKFOdSFANMrzE11dM7f8/preview" }
+      ],
+      8: [
+        { title: "Chapter 1", file: "https://drive.google.com/file/d/1gPuMRcISG99RMKVh-GMH9M8IiTdy8-bU/preview" }
+      ]
+    };
 
-let classNotes = notes[classNo] || [];
+    const STORAGE_KEY = "school_notes_data_v1";
+    const ADMIN_SESSION_KEY = "school_admin_logged_in";
+    const ADMIN_USER = "admin";
+    const ADMIN_PASS = "1234";
 
-if(classNotes.length === 0){
-container.innerHTML = "<p>No notes available</p>";
-return;
-}
+    let selectedClass = 6;
+    let editIndex = -1;
 
-classNotes.forEach(note=>{
-const div = document.createElement("div");
-div.className = "note-card";
+    function getNotes() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      return saved ? JSON.parse(saved) : structuredClone(defaultNotes);
+    }
 
-div.innerHTML = `
-<h3>${note.title}</h3>
-<a href="${note.file}" target="_blank">
-<button class="open-btn">Open PDF</button>
-</a>
-`;
+    function saveNotesToStorage(data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
 
-container.appendChild(div);
-});
-}
+    function ensureData() {
+      if (!localStorage.getItem(STORAGE_KEY)) {
+        saveNotesToStorage(defaultNotes);
+      }
+    }
 
-/* ---------------- LOGIN SYSTEM ---------------- */
-let isAdmin = false;
+    function showClass(cls) {
+      selectedClass = cls;
+      const notes = getNotes();
+      document.querySelectorAll(".tabs button").forEach(btn => btn.classList.remove("active"));
+      document.getElementById("tab" + cls).classList.add("active");
 
-function openLogin(){
-document.getElementById("loginBox").style.display = "block";
-}
+      let html = `<h2 class="section-title">Class ${cls} Notes</h2>`;
 
-function login(){
-const pass = document.getElementById("passwordInput").value;
+      if (!notes[cls] || notes[cls].length === 0) {
+        html += `<p class="empty">No chapters added yet.</p>`;
+      } else {
+        html += `<div class="notes-grid">`;
+        notes[cls].forEach(n => {
+          html += `
+            <div class="note-card">
+              <h3>${escapeHtml(n.title)}</h3>
+              <button class="open-btn" onclick="openPDF('${escapeAttr(n.file)}')">📖 Open PDF</button>
+            </div>
+          `;
+        });
+        html += `</div>`;
+      }
 
-if(pass === "1234"){
-isAdmin = true;
-document.getElementById("loginBox").style.display = "none";
-document.getElementById("adminPanel").style.display = "block";
-startAutoLogout();
-alert("Login successful");
-} else {
-alert("Wrong password");
-}
-}
+      document.getElementById("content").innerHTML = html;
 
-/* ---------------- LOGOUT ---------------- */
-let logoutTimer;
+      if (isAdminLoggedIn()) {
+        renderAdminList();
+      }
+    }
 
-function startAutoLogout(){
-clearTimeout(logoutTimer);
+    function openPDF(url) {
+      document.getElementById("pdf").src = url;
+      document.getElementById("modal").style.display = "block";
+    }
 
-logoutTimer = setTimeout(() => {
-alert("Session expired");
-closeAdmin();
-}, 3 * 60 * 1000);
-}
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+      document.getElementById("pdf").src = "";
+    }
 
-function closeAdmin(){
-isAdmin = false;
-document.getElementById("adminPanel").style.display = "none";
-}
+    function openLogin() {
+      document.getElementById("loginModal").style.display = "block";
+    }
 
-/* reset timer */
-document.addEventListener("click", ()=>{
-if(isAdmin) startAutoLogout();
-});
+    function closeLogin() {
+      document.getElementById("loginModal").style.display = "none";
+      document.getElementById("adminUser").value = "";
+      document.getElementById("adminPass").value = "";
+    }
 
-/* ---------------- ADD NOTE ---------------- */
-function addNoteFromUI(){
+    function loginAdmin() {
+      const user = document.getElementById("adminUser").value.trim();
+      const pass = document.getElementById("adminPass").value.trim();
 
-const cls = document.getElementById("classInput").value;
-const title = document.getElementById("titleInput").value;
-const link = document.getElementById("linkInput").value;
+      if (user === ADMIN_USER && pass === ADMIN_PASS) {
+        localStorage.setItem(ADMIN_SESSION_KEY, "yes");
+        closeLogin();
+        updateAdminUI();
+        alert("Login successful");
+      } else {
+        alert("Invalid username or password");
+      }
+    }
 
-if(!title || !link){
-alert("Please fill all fields");
-return;
-}
+    function logoutAdmin() {
+      localStorage.removeItem(ADMIN_SESSION_KEY);
+      document.getElementById("adminPanel").classList.add("hidden");
+      document.getElementById("logoutBtn").style.display = "none";
+      editIndex = -1;
+      resetForm();
+    }
 
-if(!notes[cls]) notes[cls] = [];
+    function isAdminLoggedIn() {
+      return localStorage.getItem(ADMIN_SESSION_KEY) === "yes";
+    }
 
-notes[cls].push({title, file:link});
-saveData();
+    function updateAdminUI() {
+      const panel = document.getElementById("adminPanel");
+      const logoutBtn = document.getElementById("logoutBtn");
 
-document.getElementById("titleInput").value = "";
-document.getElementById("linkInput").value = "";
+      if (isAdminLoggedIn()) {
+        panel.classList.remove("hidden");
+        logoutBtn.style.display = "inline-block";
+        document.getElementById("adminClass").value = selectedClass;
+        renderAdminList();
+      } else {
+        panel.classList.add("hidden");
+        logoutBtn.style.display = "none";
+      }
+    }
 
-showClass(cls, document.querySelector(".menu-btn.active"));
+    function saveChapter() {
+      const cls = document.getElementById("adminClass").value;
+      const title = document.getElementById("chapterTitle").value.trim();
+      const link = document.getElementById("chapterLink").value.trim();
 
-alert("Note added!");
-}
+      if (!title || !link) {
+        alert("Please fill all fields");
+        return;
+      }
 
-/* INIT */
-window.addEventListener("DOMContentLoaded", ()=>{
-showClass("6", document.querySelector(".menu-btn"));
-});
+      const notes = getNotes();
 
-</script>
+      if (!notes[cls]) notes[cls] = [];
 
+      const chapterData = { title, file: link };
+
+      if (editIndex === -1) {
+        notes[cls].push(chapterData);
+      } else {
+        notes[cls][editIndex] = chapterData;
+      }
+
+      saveNotesToStorage(notes);
+      resetForm();
+      showClass(Number(cls));
+      renderAdminList();
+    }
+
+    function renderAdminList() {
+      const cls = document.getElementById("adminClass").value;
+      const notes = getNotes();
+      const list = notes[cls] || [];
+      const box = document.getElementById("adminChapterList");
+
+      if (list.length === 0) {
+        box.innerHTML = `<p class="empty">No chapters in Class ${cls} yet.</p>`;
+        return;
+      }
+
+      let html = `<h3>Manage Class ${cls} Chapters</h3>`;
+      list.forEach((item, index) => {
+        html += `
+          <div class="chapter-row">
+            <div class="chip">Class ${cls}</div>
+            <div>
+              <strong>${escapeHtml(item.title)}</strong>
+            </div>
+            <div class="small">${escapeHtml(item.file)}</div>
+            <button class="btn edit" onclick="editChapter(${cls}, ${index})">Edit</button>
+            <button class="btn danger" onclick="deleteChapter(${cls}, ${index})">Delete</button>
+          </div>
+        `;
+      });
+
+      box.innerHTML = html;
+    }
+
+    function editChapter(cls, index) {
+      const notes = getNotes();
+      const item = notes[cls][index];
+
+      document.getElementById("adminClass").value = cls;
+      document.getElementById("chapterTitle").value = item.title;
+      document.getElementById("chapterLink").value = item.file;
+      document.getElementById("saveBtn").textContent = "Update Chapter";
+
+      selectedClass = Number(cls);
+      editIndex = index;
+      showClass(Number(cls));
+      window.scrollTo({ top: document.getElementById("adminPanel").offsetTop - 10, behavior: "smooth" });
+    }
+
+    function deleteChapter(cls, index) {
+      if (!confirm("Delete this chapter?")) return;
+
+      const notes = getNotes();
+      notes[cls].splice(index, 1);
+      saveNotesToStorage(notes);
+
+      if (editIndex === index) {
+        resetForm();
+      }
+
+      showClass(Number(cls));
+      renderAdminList();
+    }
+
+    function resetForm() {
+      document.getElementById("chapterTitle").value = "";
+      document.getElementById("chapterLink").value = "";
+      document.getElementById("saveBtn").textContent = "Add Chapter";
+      editIndex = -1;
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function escapeAttr(str) {
+      return str.replaceAll("'", "\\'");
+    }
+
+    document.getElementById("adminClass").addEventListener("change", function() {
+      resetForm();
+      renderAdminList();
+    });
+
+    ensureData();
+    updateAdminUI();
+    showClass(6);
+  </script>
 </body>
 </html>
