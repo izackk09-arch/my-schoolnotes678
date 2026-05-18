@@ -4,7 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>School Notes</title>
+
   <style>
+
     :root{
       --bg:#f4f6f9;
       --card:#ffffff;
@@ -14,45 +16,53 @@
       --primary-dark:#15803d;
       --blue:#2563eb;
       --red:#dc2626;
-      --orange:#ea580c;
       --border:#e5e7eb;
       --shadow:0 8px 24px rgba(0,0,0,0.08);
       --radius:14px;
     }
 
-    *{box-sizing:border-box;margin:0;padding:0}
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
     body{
-      font-family:Arial, sans-serif;
+      font-family:Arial,sans-serif;
       background:var(--bg);
       color:var(--text);
       padding:20px;
     }
 
-    h1{text-align:center;margin-bottom:18px}
+    h1{
+      text-align:center;
+      margin-bottom:20px;
+    }
+
     .topbar{
       max-width:1100px;
-      margin:0 auto 18px;
+      margin:0 auto 20px;
       display:flex;
       justify-content:space-between;
       align-items:center;
-      gap:12px;
       flex-wrap:wrap;
+      gap:10px;
     }
 
     .tabs{
-      text-align:center;
-      margin:20px 0;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
     }
 
     .tabs button,
-    .admin-btn,
-    .btn{
-      padding:10px 18px;
-      margin:5px;
-      font-size:15px;
+    .btn,
+    .admin-btn{
+      padding:10px 16px;
       border:none;
       border-radius:10px;
       cursor:pointer;
+      font-size:15px;
     }
 
     .tabs button{
@@ -70,34 +80,38 @@
     }
 
     .logout-btn{
+      display:none;
       background:var(--red);
       color:#fff;
-      display:none;
     }
 
-    #content, #adminPanel{
+    #content,
+    #adminPanel{
       max-width:1100px;
       margin:0 auto;
+    }
+
+    .section-title{
+      text-align:center;
+      margin:20px 0;
     }
 
     .notes-grid{
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
       gap:16px;
-      margin-top:20px;
     }
 
     .note-card{
-      background:var(--card);
+      background:#fff;
       padding:18px;
-      border-radius:var(--radius);
+      border-radius:14px;
       box-shadow:var(--shadow);
       border:1px solid var(--border);
     }
 
     .note-card h3{
-      margin-bottom:14px;
-      font-size:20px;
+      margin-bottom:15px;
     }
 
     .open-btn{
@@ -107,19 +121,96 @@
       color:white;
       border:none;
       border-radius:10px;
-      font-size:16px;
       cursor:pointer;
+      font-size:15px;
     }
 
-    .open-btn:hover{background:var(--primary-dark)}
+    .open-btn:hover{
+      background:var(--primary-dark);
+    }
 
-    #modal, #loginModal{
+    .panel{
+      margin-top:30px;
+      background:#fff;
+      border-radius:16px;
+      padding:20px;
+      box-shadow:var(--shadow);
+    }
+
+    .admin-form{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr 1.4fr auto;
+      gap:12px;
+      align-items:end;
+    }
+
+    .form-group label{
+      display:block;
+      margin-bottom:6px;
+      font-weight:bold;
+    }
+
+    input,
+    select{
+      width:100%;
+      padding:12px;
+      border:1px solid #d1d5db;
+      border-radius:10px;
+    }
+
+    .btn{
+      background:var(--primary);
+      color:white;
+    }
+
+    .btn.danger{
+      background:var(--red);
+    }
+
+    .chapter-row{
+      display:grid;
+      grid-template-columns:100px 1fr 1.5fr auto;
+      gap:10px;
+      align-items:center;
+      background:#f9fafb;
+      border:1px solid var(--border);
+      padding:12px;
+      border-radius:12px;
+      margin-top:10px;
+    }
+
+    .chip{
+      background:#dcfce7;
+      color:#166534;
+      padding:8px;
+      border-radius:999px;
+      text-align:center;
+      font-size:14px;
+      font-weight:bold;
+    }
+
+    .small{
+      font-size:14px;
+      color:var(--muted);
+      word-break:break-all;
+    }
+
+    .hidden{
+      display:none;
+    }
+
+    .empty{
+      text-align:center;
+      color:var(--muted);
+      margin-top:20px;
+    }
+
+    #modal,
+    #loginModal{
       display:none;
       position:fixed;
       inset:0;
-      width:100%;
-      height:100%;
-      background:rgba(0,0,0,0.82);
+      background:rgba(0,0,0,0.8);
       z-index:1000;
       padding:20px;
     }
@@ -135,478 +226,521 @@
 
     .close-x{
       position:absolute;
-      top:18px;
-      right:18px;
+      top:15px;
+      right:15px;
+      width:45px;
+      height:45px;
+      border:none;
+      border-radius:50%;
       background:var(--red);
       color:white;
-      border:none;
-      width:46px;
-      height:46px;
-      border-radius:50%;
       font-size:20px;
       cursor:pointer;
     }
 
     .login-box{
       max-width:400px;
-      margin:90px auto;
-      background:#fff;
+      margin:100px auto;
+      background:white;
       border-radius:16px;
       padding:24px;
-      box-shadow:var(--shadow);
     }
 
-    .login-box h2{
-      text-align:center;
-      margin-bottom:18px;
-    }
+    @media(max-width:860px){
 
-    .form-group{
-      margin-bottom:14px;
-    }
-
-    label{
-      display:block;
-      margin-bottom:6px;
-      font-weight:bold;
-    }
-
-    input, select{
-      width:100%;
-      padding:12px;
-      border:1px solid #d1d5db;
-      border-radius:10px;
-      font-size:15px;
-      outline:none;
-    }
-
-    input:focus, select:focus{
-      border-color:var(--blue);
-    }
-
-    .btn{
-      background:var(--primary);
-      color:#fff;
-    }
-
-    .btn.secondary{
-      background:var(--blue);
-    }
-
-    .btn.danger{
-      background:var(--red);
-    }
-
-    .btn.edit{
-      background:var(--orange);
-      color:#fff;
-    }
-
-    .panel{
-      background:#fff;
-      border-radius:16px;
-      box-shadow:var(--shadow);
-      padding:20px;
-      border:1px solid var(--border);
-      margin-top:20px;
-    }
-
-    .panel h2{
-      margin-bottom:16px;
-    }
-
-    .admin-form{
-      display:grid;
-      grid-template-columns:1fr 1fr 1.4fr auto;
-      gap:12px;
-      align-items:end;
-    }
-
-    .chapter-list{
-      margin-top:24px;
-      display:grid;
-      gap:12px;
-    }
-
-    .chapter-row{
-      display:grid;
-      grid-template-columns:90px 1fr 1.4fr auto auto;
-      gap:10px;
-      align-items:center;
-      background:#f9fafb;
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:12px;
-    }
-
-    .chip{
-      background:#dcfce7;
-      color:#166534;
-      padding:8px 10px;
-      border-radius:999px;
-      text-align:center;
-      font-weight:bold;
-      font-size:14px;
-    }
-
-    .small{
-      color:var(--muted);
-      font-size:14px;
-      word-break:break-all;
-    }
-
-    .hidden{display:none}
-
-    .section-title{
-      text-align:center;
-      margin-top:10px;
-      font-size:24px;
-    }
-
-    .empty{
-      text-align:center;
-      color:var(--muted);
-      margin-top:20px;
-    }
-
-    @media (max-width: 860px){
       .admin-form{
         grid-template-columns:1fr;
       }
+
       .chapter-row{
         grid-template-columns:1fr;
       }
-      .tabs button, .admin-btn, .btn{
+
+      .tabs{
         width:100%;
-        margin:6px 0;
       }
-      .topbar{
-        flex-direction:column;
-        align-items:stretch;
+
+      .tabs button,
+      .admin-btn,
+      .btn{
+        width:100%;
       }
+
     }
+
   </style>
 </head>
 <body>
 
-  <h1>📚 My School Notes</h1>
+<h1>📚 My School Notes</h1>
 
-  <div class="topbar">
-    <div class="tabs" id="classTabs">
-      <button onclick="showClass(6)" id="tab6">Class 6</button>
-      <button onclick="showClass(7)" id="tab7">Class 7</button>
-      <button onclick="showClass(8)" id="tab8">Class 8</button>
-    </div>
+<div class="topbar">
 
-    <div>
-      <button class="admin-btn" onclick="openLogin()">Admin Login</button>
-      <button class="admin-btn logout-btn" id="logoutBtn" onclick="logoutAdmin()">Logout</button>
-    </div>
+  <div class="tabs">
+    <button onclick="showClass(6)" id="tab6">Class 6</button>
+    <button onclick="showClass(7)" id="tab7">Class 7</button>
+    <button onclick="showClass(8)" id="tab8">Class 8</button>
   </div>
 
-  <div id="content"></div>
+  <div>
+    <button class="admin-btn" onclick="openLogin()">
+      Admin Login
+    </button>
 
-  <div id="adminPanel" class="hidden">
-    <div class="panel">
-      <h2>Admin Panel</h2>
+    <button
+      class="admin-btn logout-btn"
+      id="logoutBtn"
+      onclick="logoutAdmin()">
 
-      <div class="admin-form">
-        <div class="form-group">
-          <label for="adminClass">Select Class</label>
-          <select id="adminClass">
-            <option value="6">Class 6</option>
-            <option value="7">Class 7</option>
-            <option value="8">Class 8</option>
-          </select>
-        </div>
+      Logout
 
-        <div class="form-group">
-          <label for="chapterTitle">Chapter Title</label>
-          <input type="text" id="chapterTitle" placeholder="e.g. Chapter 2" />
-        </div>
-
-        <div class="form-group">
-          <label for="chapterLink">Google Drive Preview Link</label>
-          <input type="text" id="chapterLink" placeholder="Paste preview link here" />
-        </div>
-
-        <div class="form-group">
-          <button class="btn" id="saveBtn" onclick="saveChapter()">Add Chapter</button>
-        </div>
-      </div>
-
-      <div class="chapter-list" id="adminChapterList"></div>
-    </div>
+    </button>
   </div>
 
-  <!-- PDF Modal -->
-  <div id="modal">
-    <button class="close-x" onclick="closeModal()">✕</button>
-    <iframe id="pdf"></iframe>
-  </div>
+</div>
 
-  <!-- Login Modal -->
-  <div id="loginModal">
-    <div class="login-box">
-      <h2>Admin Login</h2>
+<div id="content"></div>
+
+<div id="adminPanel" class="hidden">
+
+  <div class="panel">
+
+    <h2>Admin Panel</h2>
+
+    <div class="admin-form">
 
       <div class="form-group">
-        <label for="adminUser">Username</label>
-        <input type="text" id="adminUser" placeholder="Enter username" />
+        <label>Select Class</label>
+
+        <select id="adminClass">
+          <option value="6">Class 6</option>
+          <option value="7">Class 7</option>
+          <option value="8">Class 8</option>
+        </select>
       </div>
 
       <div class="form-group">
-        <label for="adminPass">Password</label>
-        <input type="password" id="adminPass" placeholder="Enter password" />
+        <label>Subject</label>
+
+        <input
+          type="text"
+          id="adminSubject"
+          placeholder="e.g. Computer" />
       </div>
 
-      <button class="btn" style="width:100%" onclick="loginAdmin()">Login</button>
-      <button class="btn danger" style="width:100%;margin-top:10px" onclick="closeLogin()">Cancel</button>
+      <div class="form-group">
+        <label>Chapter Title</label>
+
+        <input
+          type="text"
+          id="chapterTitle"
+          placeholder="e.g. Chapter 1" />
+      </div>
+
+      <div class="form-group">
+        <label>Google Drive Preview Link</label>
+
+        <input
+          type="text"
+          id="chapterLink"
+          placeholder="Paste preview link" />
+      </div>
+
+      <div class="form-group">
+        <button class="btn" onclick="saveChapter()">
+          Add Chapter
+        </button>
+      </div>
+
     </div>
+
+    <div id="adminChapterList"></div>
+
   </div>
 
-  <script>
-    const defaultNotes = {
-      6: [
-        { title: "Chapter 1", file: "https://drive.google.com/file/d/1-cN3acKz1aPC5-58cfp4v7EZLv75Lc0i/preview" }
-      ],
-      7: [
-        { title: "Chapter 1", file: "https://drive.google.com/file/d/17qyEICNyOcRLlKFOdSFANMrzE11dM7f8/preview" }
-      ],
-      8: [
-        { title: "Chapter 1", file: "https://drive.google.com/file/d/1gPuMRcISG99RMKVh-GMH9M8IiTdy8-bU/preview" }
-      ]
-    };
+</div>
 
-    const STORAGE_KEY = "school_notes_data_v1";
-    const ADMIN_SESSION_KEY = "school_admin_logged_in";
-    const ADMIN_USER = "admin";
-    const ADMIN_PASS = "1234";
+<div id="modal">
+  <button class="close-x" onclick="closeModal()">✕</button>
+  <iframe id="pdf"></iframe>
+</div>
 
-    let selectedClass = 6;
-    let editIndex = -1;
+<div id="loginModal">
 
-    function getNotes() {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      return saved ? JSON.parse(saved) : structuredClone(defaultNotes);
-    }
+  <div class="login-box">
 
-    function saveNotesToStorage(data) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    }
+    <h2 style="margin-bottom:20px;text-align:center">
+      Admin Login
+    </h2>
 
-    function ensureData() {
-      if (!localStorage.getItem(STORAGE_KEY)) {
-        saveNotesToStorage(defaultNotes);
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" id="adminUser" />
+    </div>
+
+    <br>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="adminPass" />
+    </div>
+
+    <br>
+
+    <button class="btn" style="width:100%" onclick="loginAdmin()">
+      Login
+    </button>
+
+  </div>
+
+</div>
+
+<script>
+
+const defaultNotes = {
+
+  6: {
+    Computer: [
+      {
+        title: "Chapter 1",
+        file: "https://drive.google.com/file/d/1-cN3acKz1aPC5-58cfp4v7EZLv75Lc0i/preview"
       }
-    }
+    ],
+    English: [],
+    Science: [],
+    Maths: []
+  },
 
-    function showClass(cls) {
-      selectedClass = cls;
-      const notes = getNotes();
-      document.querySelectorAll(".tabs button").forEach(btn => btn.classList.remove("active"));
-      document.getElementById("tab" + cls).classList.add("active");
+  7: {
+    Computer: [
+      {
+        title: "Chapter 1",
+        file: "https://drive.google.com/file/d/17qyEICNyOcRLlKFOdSFANMrzE11dM7f8/preview"
+      }
+    ],
+    English: [],
+    Science: [],
+    Maths: []
+  },
 
-      let html = `<h2 class="section-title">Class ${cls} Notes</h2>`;
+  8: {
+    Computer: [
+      {
+        title: "Chapter 1",
+        file: "https://drive.google.com/file/d/1gPuMRcISG99RMKVh-GMH9M8IiTdy8-bU/preview"
+      }
+    ],
+    English: [],
+    Science: [],
+    Maths: []
+  }
 
-      if (!notes[cls] || notes[cls].length === 0) {
-        html += `<p class="empty">No chapters added yet.</p>`;
-      } else {
-        html += `<div class="notes-grid">`;
-        notes[cls].forEach(n => {
+};
+
+const STORAGE_KEY = "school_notes_data_v2";
+const ADMIN_SESSION_KEY = "school_admin_logged_in";
+
+const ADMIN_USER = "admin";
+const ADMIN_PASS = "1234";
+
+let selectedClass = 6;
+let selectedSubject = "Computer";
+
+function getNotes(){
+
+  const saved = localStorage.getItem(STORAGE_KEY);
+
+  return saved
+    ? JSON.parse(saved)
+    : structuredClone(defaultNotes);
+}
+
+function saveNotesToStorage(data){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function ensureData(){
+
+  if(!localStorage.getItem(STORAGE_KEY)){
+    saveNotesToStorage(defaultNotes);
+  }
+}
+
+function showClass(cls){
+
+  selectedClass = cls;
+
+  document.querySelectorAll('.tabs button')
+    .forEach(btn => btn.classList.remove('active'));
+
+  document.getElementById('tab' + cls)
+    .classList.add('active');
+
+  const notes = getNotes();
+
+  const subjects = Object.keys(notes[cls]);
+
+  if(!subjects.includes(selectedSubject)){
+    selectedSubject = subjects[0];
+  }
+
+  renderPage();
+}
+
+function renderPage(){
+
+  const notes = getNotes();
+
+  let html = `<div class="tabs">`;
+
+  Object.keys(notes[selectedClass])
+    .forEach(subject => {
+
+      html += `
+        <button
+          class="${selectedSubject === subject ? 'active' : ''}"
+          onclick="selectSubject('${subject}')">
+
+          ${subject}
+
+        </button>
+      `;
+    });
+
+  html += `</div>`;
+
+  html += `
+    <h2 class="section-title">
+      Class ${selectedClass} - ${selectedSubject}
+    </h2>
+  `;
+
+  const chapters = notes[selectedClass][selectedSubject];
+
+  if(chapters.length === 0){
+
+    html += `
+      <p class="empty">
+        No chapters added yet.
+      </p>
+    `;
+
+  } else {
+
+    html += `<div class="notes-grid">`;
+
+    chapters.forEach(chapter => {
+
+      html += `
+        <div class="note-card">
+
+          <h3>${chapter.title}</h3>
+
+          <button
+            class="open-btn"
+            onclick="openPDF('${chapter.file}')">
+
+            📖 Open PDF
+
+          </button>
+
+        </div>
+      `;
+
+    });
+
+    html += `</div>`;
+  }
+
+  document.getElementById('content').innerHTML = html;
+
+  if(isAdminLoggedIn()){
+    renderAdminList();
+  }
+}
+
+function selectSubject(subject){
+  selectedSubject = subject;
+  renderPage();
+}
+
+function openPDF(url){
+
+  document.getElementById('pdf').src = url;
+
+  document.getElementById('modal').style.display = 'block';
+}
+
+function closeModal(){
+
+  document.getElementById('modal').style.display = 'none';
+
+  document.getElementById('pdf').src = '';
+}
+
+function openLogin(){
+  document.getElementById('loginModal').style.display = 'block';
+}
+
+function loginAdmin(){
+
+  const user = document.getElementById('adminUser').value.trim();
+
+  const pass = document.getElementById('adminPass').value.trim();
+
+  if(user === ADMIN_USER && pass === ADMIN_PASS){
+
+    localStorage.setItem(ADMIN_SESSION_KEY, 'yes');
+
+    document.getElementById('loginModal').style.display = 'none';
+
+    updateAdminUI();
+
+    alert('Login successful');
+
+  } else {
+
+    alert('Invalid username or password');
+  }
+}
+
+function logoutAdmin(){
+
+  localStorage.removeItem(ADMIN_SESSION_KEY);
+
+  document.getElementById('adminPanel')
+    .classList.add('hidden');
+
+  document.getElementById('logoutBtn')
+    .style.display = 'none';
+}
+
+function isAdminLoggedIn(){
+
+  return localStorage.getItem(ADMIN_SESSION_KEY) === 'yes';
+}
+
+function updateAdminUI(){
+
+  if(isAdminLoggedIn()){
+
+    document.getElementById('adminPanel')
+      .classList.remove('hidden');
+
+    document.getElementById('logoutBtn')
+      .style.display = 'inline-block';
+
+    renderAdminList();
+  }
+}
+
+function saveChapter(){
+
+  const cls = document.getElementById('adminClass').value;
+
+  const subject = document.getElementById('adminSubject').value.trim();
+
+  const title = document.getElementById('chapterTitle').value.trim();
+
+  const link = document.getElementById('chapterLink').value.trim();
+
+  if(!subject || !title || !link){
+
+    alert('Please fill all fields');
+
+    return;
+  }
+
+  const notes = getNotes();
+
+  if(!notes[cls][subject]){
+    notes[cls][subject] = [];
+  }
+
+  notes[cls][subject].push({
+    title,
+    file: link
+  });
+
+  saveNotesToStorage(notes);
+
+  selectedClass = Number(cls);
+  selectedSubject = subject;
+
+  document.getElementById('adminSubject').value = '';
+  document.getElementById('chapterTitle').value = '';
+  document.getElementById('chapterLink').value = '';
+
+  renderPage();
+  renderAdminList();
+}
+
+function renderAdminList(){
+
+  const notes = getNotes();
+
+  let html = '';
+
+  Object.keys(notes[selectedClass])
+    .forEach(subject => {
+
+      html += `
+        <h3 style="margin-top:20px">
+          ${subject}
+        </h3>
+      `;
+
+      notes[selectedClass][subject]
+        .forEach((item,index) => {
+
           html += `
-            <div class="note-card">
-              <h3>${escapeHtml(n.title)}</h3>
-              <button class="open-btn" onclick="openPDF('${escapeAttr(n.file)}')">📖 Open PDF</button>
+            <div class="chapter-row">
+
+              <div class="chip">
+                Class ${selectedClass}
+              </div>
+
+              <div>
+                <strong>${item.title}</strong>
+              </div>
+
+              <div class="small">
+                ${item.file}
+              </div>
+
+              <button
+                class="btn danger"
+                onclick="deleteChapter('${subject}', ${index})">
+
+                Delete
+
+              </button>
+
             </div>
           `;
         });
-        html += `</div>`;
-      }
-
-      document.getElementById("content").innerHTML = html;
-
-      if (isAdminLoggedIn()) {
-        renderAdminList();
-      }
-    }
-
-    function openPDF(url) {
-      document.getElementById("pdf").src = url;
-      document.getElementById("modal").style.display = "block";
-    }
-
-    function closeModal() {
-      document.getElementById("modal").style.display = "none";
-      document.getElementById("pdf").src = "";
-    }
-
-    function openLogin() {
-      document.getElementById("loginModal").style.display = "block";
-    }
-
-    function closeLogin() {
-      document.getElementById("loginModal").style.display = "none";
-      document.getElementById("adminUser").value = "";
-      document.getElementById("adminPass").value = "";
-    }
-
-    function loginAdmin() {
-      const user = document.getElementById("adminUser").value.trim();
-      const pass = document.getElementById("adminPass").value.trim();
-
-      if (user === ADMIN_USER && pass === ADMIN_PASS) {
-        localStorage.setItem(ADMIN_SESSION_KEY, "yes");
-        closeLogin();
-        updateAdminUI();
-        alert("Login successful");
-      } else {
-        alert("Invalid username or password");
-      }
-    }
-
-    function logoutAdmin() {
-      localStorage.removeItem(ADMIN_SESSION_KEY);
-      document.getElementById("adminPanel").classList.add("hidden");
-      document.getElementById("logoutBtn").style.display = "none";
-      editIndex = -1;
-      resetForm();
-    }
-
-    function isAdminLoggedIn() {
-      return localStorage.getItem(ADMIN_SESSION_KEY) === "yes";
-    }
-
-    function updateAdminUI() {
-      const panel = document.getElementById("adminPanel");
-      const logoutBtn = document.getElementById("logoutBtn");
-
-      if (isAdminLoggedIn()) {
-        panel.classList.remove("hidden");
-        logoutBtn.style.display = "inline-block";
-        document.getElementById("adminClass").value = selectedClass;
-        renderAdminList();
-      } else {
-        panel.classList.add("hidden");
-        logoutBtn.style.display = "none";
-      }
-    }
-
-    function saveChapter() {
-      const cls = document.getElementById("adminClass").value;
-      const title = document.getElementById("chapterTitle").value.trim();
-      const link = document.getElementById("chapterLink").value.trim();
-
-      if (!title || !link) {
-        alert("Please fill all fields");
-        return;
-      }
-
-      const notes = getNotes();
-
-      if (!notes[cls]) notes[cls] = [];
-
-      const chapterData = { title, file: link };
-
-      if (editIndex === -1) {
-        notes[cls].push(chapterData);
-      } else {
-        notes[cls][editIndex] = chapterData;
-      }
-
-      saveNotesToStorage(notes);
-      resetForm();
-      showClass(Number(cls));
-      renderAdminList();
-    }
-
-    function renderAdminList() {
-      const cls = document.getElementById("adminClass").value;
-      const notes = getNotes();
-      const list = notes[cls] || [];
-      const box = document.getElementById("adminChapterList");
-
-      if (list.length === 0) {
-        box.innerHTML = `<p class="empty">No chapters in Class ${cls} yet.</p>`;
-        return;
-      }
-
-      let html = `<h3>Manage Class ${cls} Chapters</h3>`;
-      list.forEach((item, index) => {
-        html += `
-          <div class="chapter-row">
-            <div class="chip">Class ${cls}</div>
-            <div>
-              <strong>${escapeHtml(item.title)}</strong>
-            </div>
-            <div class="small">${escapeHtml(item.file)}</div>
-            <button class="btn edit" onclick="editChapter(${cls}, ${index})">Edit</button>
-            <button class="btn danger" onclick="deleteChapter(${cls}, ${index})">Delete</button>
-          </div>
-        `;
-      });
-
-      box.innerHTML = html;
-    }
-
-    function editChapter(cls, index) {
-      const notes = getNotes();
-      const item = notes[cls][index];
-
-      document.getElementById("adminClass").value = cls;
-      document.getElementById("chapterTitle").value = item.title;
-      document.getElementById("chapterLink").value = item.file;
-      document.getElementById("saveBtn").textContent = "Update Chapter";
-
-      selectedClass = Number(cls);
-      editIndex = index;
-      showClass(Number(cls));
-      window.scrollTo({ top: document.getElementById("adminPanel").offsetTop - 10, behavior: "smooth" });
-    }
-
-    function deleteChapter(cls, index) {
-      if (!confirm("Delete this chapter?")) return;
-
-      const notes = getNotes();
-      notes[cls].splice(index, 1);
-      saveNotesToStorage(notes);
-
-      if (editIndex === index) {
-        resetForm();
-      }
-
-      showClass(Number(cls));
-      renderAdminList();
-    }
-
-    function resetForm() {
-      document.getElementById("chapterTitle").value = "";
-      document.getElementById("chapterLink").value = "";
-      document.getElementById("saveBtn").textContent = "Add Chapter";
-      editIndex = -1;
-    }
-
-    function escapeHtml(str) {
-      return str
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-    }
-
-    function escapeAttr(str) {
-      return str.replaceAll("'", "\\'");
-    }
-
-    document.getElementById("adminClass").addEventListener("change", function() {
-      resetForm();
-      renderAdminList();
     });
 
-    ensureData();
-    updateAdminUI();
-    showClass(6);
-  </script>
+  document.getElementById('adminChapterList').innerHTML = html;
+}
+
+function deleteChapter(subject,index){
+
+  const notes = getNotes();
+
+  notes[selectedClass][subject].splice(index,1);
+
+  saveNotesToStorage(notes);
+
+  renderPage();
+  renderAdminList();
+}
+
+ensureData();
+updateAdminUI();
+showClass(6);
+
+</script>
+
 </body>
 </html>
