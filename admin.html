@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Panel</title>
+
+<style>
+body{
+  font-family:Arial;
+  background:#f4f6f9;
+  padding:20px;
+}
+
+h1{text-align:center;}
+
+.panel{
+  max-width:1000px;
+  margin:auto;
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.1);
+}
+
+input,select{
+  padding:10px;
+  margin:5px;
+}
+
+button{
+  padding:10px 14px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.add{ background:#16a34a; color:#fff; }
+.del{ background:red; color:#fff; }
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  padding:10px;
+  border-bottom:1px solid #ddd;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Admin Panel</h1>
+
+<button onclick="logout()">Logout</button>
+
+<div class="panel">
+
+  <h3>Add Chapter</h3>
+
+  <select id="cls">
+    <option value="6">Class 6</option>
+    <option value="7">Class 7</option>
+    <option value="8">Class 8</option>
+  </select>
+
+  <input id="subject" placeholder="Subject">
+  <input id="title" placeholder="Chapter Title">
+  <input id="link" placeholder="Google Drive Link">
+
+  <button class="add" onclick="addChapter()">Add</button>
+
+  <h3>Saved Chapters</h3>
+  <div id="list"></div>
+
+</div>
+
+<script>
+
+/* 🔐 BLOCK ACCESS */
+if(sessionStorage.getItem("admin") !== "yes"){
+  window.location.href = "login.html";
+}
+
+const KEY = "school_notes_data_v5";
+
+const defaultNotes = {
+  6:{ English:[], Khasi:[], Maths:[], Science:[], Computer:[] },
+  7:{ English:[], Khasi:[], Maths:[], Science:[], Computer:[] },
+  8:{ English:[], Khasi:[], Maths:[], Science:[], Computer:[] }
+};
+
+function getData(){
+  return JSON.parse(localStorage.getItem(KEY)) || defaultNotes;
+}
+
+function saveData(d){
+  localStorage.setItem(KEY, JSON.stringify(d));
+}
+
+function addChapter(){
+
+  let cls = document.getElementById("cls").value;
+  let subject = document.getElementById("subject").value.trim();
+  let title = document.getElementById("title").value.trim();
+  let link = document.getElementById("link").value.trim();
+
+  if(!subject || !title || !link){
+    alert("Fill all fields");
+    return;
+  }
+
+  let data = getData();
+
+  if(!data[cls][subject]){
+    data[cls][subject] = [];
+  }
+
+  data[cls][subject].push({title, file:link});
+
+  saveData(data);
+
+  render();
+}
+
+function render(){
+
+  let data = getData();
+  let html = "";
+
+  for(let c in data){
+    for(let s in data[c]){
+      data[c][s].forEach((ch,i)=>{
+
+        html += `
+        <div class="row">
+          <div>
+            Class ${c} - ${s} - ${ch.title}
+          </div>
+
+          <button class="del" onclick="del('${c}','${s}',${i})">
+            Delete
+          </button>
+        </div>
+        `;
+      });
+    }
+  }
+
+  document.getElementById("list").innerHTML = html;
+}
+
+function del(c,s,i){
+
+  let data = getData();
+
+  data[c][s].splice(i,1);
+
+  saveData(data);
+
+  render();
+}
+
+function logout(){
+  sessionStorage.removeItem("admin");
+  window.location.href = "login.html";
+}
+
+render();
+
+</script>
+
+</body>
+</html>
