@@ -1,744 +1,163 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>School Notes</title>
+<meta charset="UTF-8">
+<title>School Notes</title>
 
-  <style>
+<style>
+body{
+  font-family:Arial;
+  background:#f4f6f9;
+  padding:20px;
+}
 
-    :root{
-      --bg:#f4f6f9;
-      --card:#ffffff;
-      --text:#111827;
-      --muted:#6b7280;
-      --primary:#16a34a;
-      --primary-dark:#15803d;
-      --blue:#2563eb;
-      --red:#dc2626;
-      --border:#e5e7eb;
-      --shadow:0 8px 24px rgba(0,0,0,0.08);
-      --radius:14px;
-    }
+h1{
+  text-align:center;
+}
 
-    *{
-      box-sizing:border-box;
-      margin:0;
-      padding:0;
-    }
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:15px;
+  margin-top:20px;
+}
 
-    body{
-      font-family:Arial,sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      padding:20px;
-    }
+.card{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  text-align:center;
+}
 
-    h1{
-      text-align:center;
-      margin-bottom:20px;
-    }
+button{
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:#2563eb;
+  color:white;
+  cursor:pointer;
+  margin-top:10px;
+}
 
-    .topbar{
-      max-width:1100px;
-      margin:0 auto 20px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:10px;
-    }
+.chapter{
+  background:#fff;
+  margin:10px 0;
+  padding:12px;
+  border-radius:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
 
-    .tabs{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-
-    .tabs button,
-    .btn,
-    .admin-btn{
-      padding:10px 16px;
-      border:none;
-      border-radius:10px;
-      cursor:pointer;
-      font-size:15px;
-    }
-
-    .tabs button{
-      background:#e5e7eb;
-    }
-
-    .tabs button.active{
-      background:var(--primary);
-      color:#fff;
-    }
-
-    .admin-btn{
-      background:var(--blue);
-      color:#fff;
-    }
-
-    .logout-btn{
-      display:none;
-      background:var(--red);
-      color:#fff;
-    }
-
-    #content,
-    #adminPanel{
-      max-width:1100px;
-      margin:0 auto;
-    }
-
-    .section-title{
-      text-align:center;
-      margin:20px 0;
-    }
-
-    .notes-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-      gap:16px;
-    }
-
-    .note-card{
-      background:#fff;
-      padding:18px;
-      border-radius:14px;
-      box-shadow:var(--shadow);
-      border:1px solid var(--border);
-    }
-
-    .note-card h3{
-      margin-bottom:15px;
-    }
-
-    .open-btn{
-      width:100%;
-      padding:12px;
-      background:var(--primary);
-      color:white;
-      border:none;
-      border-radius:10px;
-      cursor:pointer;
-      font-size:15px;
-    }
-
-    .open-btn:hover{
-      background:var(--primary-dark);
-    }
-
-    .panel{
-      margin-top:30px;
-      background:#fff;
-      border-radius:16px;
-      padding:20px;
-      box-shadow:var(--shadow);
-    }
-
-    .admin-form{
-      display:grid;
-      grid-template-columns:1fr 1fr 1fr 1.4fr auto;
-      gap:12px;
-      align-items:end;
-    }
-
-    .form-group label{
-      display:block;
-      margin-bottom:6px;
-      font-weight:bold;
-    }
-
-    input,
-    select{
-      width:100%;
-      padding:12px;
-      border:1px solid #d1d5db;
-      border-radius:10px;
-    }
-
-    .btn{
-      background:var(--primary);
-      color:white;
-    }
-
-    .btn.danger{
-      background:var(--red);
-    }
-
-    .chapter-row{
-      display:grid;
-      grid-template-columns:100px 1fr 1.5fr auto;
-      gap:10px;
-      align-items:center;
-      background:#f9fafb;
-      border:1px solid var(--border);
-      padding:12px;
-      border-radius:12px;
-      margin-top:10px;
-    }
-
-    .chip{
-      background:#dcfce7;
-      color:#166534;
-      padding:8px;
-      border-radius:999px;
-      text-align:center;
-      font-size:14px;
-      font-weight:bold;
-    }
-
-    .small{
-      font-size:14px;
-      color:var(--muted);
-      word-break:break-all;
-    }
-
-    .hidden{
-      display:none;
-    }
-
-    .empty{
-      text-align:center;
-      color:var(--muted);
-      margin-top:20px;
-    }
-
-    #modal,
-    #loginModal{
-      display:none;
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.8);
-      z-index:1000;
-      padding:20px;
-    }
-
-    #modal iframe{
-      width:90%;
-      height:90%;
-      margin:3% 5%;
-      border:none;
-      border-radius:10px;
-      background:#fff;
-    }
-
-    .close-x{
-      position:absolute;
-      top:15px;
-      right:15px;
-      width:45px;
-      height:45px;
-      border:none;
-      border-radius:50%;
-      background:var(--red);
-      color:white;
-      font-size:20px;
-      cursor:pointer;
-    }
-
-    .login-box{
-      max-width:400px;
-      margin:100px auto;
-      background:white;
-      border-radius:16px;
-      padding:24px;
-    }
-
-    @media(max-width:860px){
-
-      .admin-form{
-        grid-template-columns:1fr;
-      }
-
-      .chapter-row{
-        grid-template-columns:1fr;
-      }
-
-      .tabs{
-        width:100%;
-      }
-
-      .tabs button,
-      .admin-btn,
-      .btn{
-        width:100%;
-      }
-
-    }
-
-  </style>
+.back{
+  background:#16a34a;
+}
+</style>
 </head>
+
 <body>
 
-<h1>📚 My School Notes</h1>
+<h1>📚 School Notes</h1>
 
-<div class="topbar">
-
-  <div class="tabs">
-    <button onclick="showClass(6)" id="tab6">Class 6</button>
-    <button onclick="showClass(7)" id="tab7">Class 7</button>
-    <button onclick="showClass(8)" id="tab8">Class 8</button>
-  </div>
-
-  <div>
-    <button class="admin-btn" onclick="openLogin()">
-      Admin Login
-    </button>
-
-    <button
-      class="admin-btn logout-btn"
-      id="logoutBtn"
-      onclick="logoutAdmin()">
-
-      Logout
-
-    </button>
-  </div>
-
-</div>
+<button onclick="goHome()">Home</button>
 
 <div id="content"></div>
 
-<div id="adminPanel" class="hidden">
-
-  <div class="panel">
-
-    <h2>Admin Panel</h2>
-
-    <div class="admin-form">
-
-      <div class="form-group">
-        <label>Select Class</label>
-
-        <select id="adminClass">
-          <option value="6">Class 6</option>
-          <option value="7">Class 7</option>
-          <option value="8">Class 8</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Subject</label>
-
-        <input
-          type="text"
-          id="adminSubject"
-          placeholder="e.g. Computer" />
-      </div>
-
-      <div class="form-group">
-        <label>Chapter Title</label>
-
-        <input
-          type="text"
-          id="chapterTitle"
-          placeholder="e.g. Chapter 1" />
-      </div>
-
-      <div class="form-group">
-        <label>Google Drive Preview Link</label>
-
-        <input
-          type="text"
-          id="chapterLink"
-          placeholder="Paste preview link" />
-      </div>
-
-      <div class="form-group">
-        <button class="btn" onclick="saveChapter()">
-          Add Chapter
-        </button>
-      </div>
-
-    </div>
-
-    <div id="adminChapterList"></div>
-
-  </div>
-
-</div>
-
-<div id="modal">
-  <button class="close-x" onclick="closeModal()">✕</button>
-  <iframe id="pdf"></iframe>
-</div>
-
-<div id="loginModal">
-
-  <div class="login-box">
-
-    <h2 style="margin-bottom:20px;text-align:center">
-      Admin Login
-    </h2>
-
-    <div class="form-group">
-      <label>Username</label>
-      <input type="text" id="adminUser" />
-    </div>
-
-    <br>
-
-    <div class="form-group">
-      <label>Password</label>
-      <input type="password" id="adminPass" />
-    </div>
-
-    <br>
-
-    <button class="btn" style="width:100%" onclick="loginAdmin()">
-      Login
-    </button>
-
-  </div>
-
+<!-- PDF VIEWER -->
+<div id="viewer" style="display:none;">
+  <button onclick="closePDF()">Close</button>
+  <iframe id="pdf" style="width:100%;height:80vh;border:none;"></iframe>
 </div>
 
 <script>
 
-const defaultNotes = {
+const KEY = "school_notes";
 
-  6: {
-    Computer: [
-      {
-        title: "Chapter 1",
-        file: "https://drive.google.com/file/d/1-cN3acKz1aPC5-58cfp4v7EZLv75Lc0i/preview"
-      }
-    ],
-    English: [],
-    Science: [],
-    Maths: []
-  },
+function getData(){
+  return JSON.parse(localStorage.getItem(KEY)) || {
+    6:{English:[],Khasi:[],Maths:[],Science:[],Computer:[]},
+    7:{English:[],Khasi:[],Maths:[],Science:[],Computer:[]},
+    8:{English:[],Khasi:[],Maths:[],Science:[],Computer:[]}
+  };
+}
 
-  7: {
-    Computer: [
-      {
-        title: "Chapter 1",
-        file: "https://drive.google.com/file/d/17qyEICNyOcRLlKFOdSFANMrzE11dM7f8/preview"
-      }
-    ],
-    English: [],
-    Science: [],
-    Maths: []
-  },
+function goHome(){
 
-  8: {
-    Computer: [
-      {
-        title: "Chapter 1",
-        file: "https://drive.google.com/file/d/1gPuMRcISG99RMKVh-GMH9M8IiTdy8-bU/preview"
-      }
-    ],
-    English: [],
-    Science: [],
-    Maths: []
+  let html = `<div class="grid">`;
+
+  for(let c of [6,7,8]){
+    html += `
+      <div class="card">
+        <h2>Class ${c}</h2>
+        <button onclick="openClass(${c})">Open</button>
+      </div>
+    `;
   }
-
-};
-
-const STORAGE_KEY = "school_notes_data_v2";
-const ADMIN_SESSION_KEY = "school_admin_logged_in";
-
-const ADMIN_USER = "admin";
-const ADMIN_PASS = "1234";
-
-let selectedClass = 6;
-let selectedSubject = "Computer";
-
-function getNotes(){
-
-  const saved = localStorage.getItem(STORAGE_KEY);
-
-  return saved
-    ? JSON.parse(saved)
-    : structuredClone(defaultNotes);
-}
-
-function saveNotesToStorage(data){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-function ensureData(){
-
-  if(!localStorage.getItem(STORAGE_KEY)){
-    saveNotesToStorage(defaultNotes);
-  }
-}
-
-function showClass(cls){
-
-  selectedClass = cls;
-
-  document.querySelectorAll('.tabs button')
-    .forEach(btn => btn.classList.remove('active'));
-
-  document.getElementById('tab' + cls)
-    .classList.add('active');
-
-  const notes = getNotes();
-
-  const subjects = Object.keys(notes[cls]);
-
-  if(!subjects.includes(selectedSubject)){
-    selectedSubject = subjects[0];
-  }
-
-  renderPage();
-}
-
-function renderPage(){
-
-  const notes = getNotes();
-
-  let html = `<div class="tabs">`;
-
-  Object.keys(notes[selectedClass])
-    .forEach(subject => {
-
-      html += `
-        <button
-          class="${selectedSubject === subject ? 'active' : ''}"
-          onclick="selectSubject('${subject}')">
-
-          ${subject}
-
-        </button>
-      `;
-    });
 
   html += `</div>`;
 
-  html += `
-    <h2 class="section-title">
-      Class ${selectedClass} - ${selectedSubject}
-    </h2>
-  `;
+  document.getElementById("content").innerHTML = html;
+}
 
-  const chapters = notes[selectedClass][selectedSubject];
+function openClass(c){
 
-  if(chapters.length === 0){
+  let data = getData();
+
+  let html = `<button class="back" onclick="goHome()">← Back</button><h2>Class ${c}</h2><div class="grid">`;
+
+  for(let subject in data[c]){
 
     html += `
-      <p class="empty">
-        No chapters added yet.
-      </p>
+      <div class="card">
+        <h3>${subject}</h3>
+        <button onclick="openSubject(${c},'${subject}')">Open</button>
+      </div>
     `;
-
-  } else {
-
-    html += `<div class="notes-grid">`;
-
-    chapters.forEach(chapter => {
-
-      html += `
-        <div class="note-card">
-
-          <h3>${chapter.title}</h3>
-
-          <button
-            class="open-btn"
-            onclick="openPDF('${chapter.file}')">
-
-            📖 Open PDF
-
-          </button>
-
-        </div>
-      `;
-
-    });
-
-    html += `</div>`;
   }
 
-  document.getElementById('content').innerHTML = html;
+  html += `</div>`;
 
-  if(isAdminLoggedIn()){
-    renderAdminList();
-  }
+  document.getElementById("content").innerHTML = html;
 }
 
-function selectSubject(subject){
-  selectedSubject = subject;
-  renderPage();
-}
+function openSubject(c,subject){
 
-function openPDF(url){
+  let data = getData();
 
-  document.getElementById('pdf').src = url;
+  let chapters = data[c][subject];
 
-  document.getElementById('modal').style.display = 'block';
-}
+  let html = `<button class="back" onclick="openClass(${c})">← Back</button>
+  <h2>${subject}</h2>`;
 
-function closeModal(){
-
-  document.getElementById('modal').style.display = 'none';
-
-  document.getElementById('pdf').src = '';
-}
-
-function openLogin(){
-  document.getElementById('loginModal').style.display = 'block';
-}
-
-function loginAdmin(){
-
-  const user = document.getElementById('adminUser').value.trim();
-
-  const pass = document.getElementById('adminPass').value.trim();
-
-  if(user === ADMIN_USER && pass === ADMIN_PASS){
-
-    localStorage.setItem(ADMIN_SESSION_KEY, 'yes');
-
-    document.getElementById('loginModal').style.display = 'none';
-
-    updateAdminUI();
-
-    alert('Login successful');
-
-  } else {
-
-    alert('Invalid username or password');
-  }
-}
-
-function logoutAdmin(){
-
-  localStorage.removeItem(ADMIN_SESSION_KEY);
-
-  document.getElementById('adminPanel')
-    .classList.add('hidden');
-
-  document.getElementById('logoutBtn')
-    .style.display = 'none';
-}
-
-function isAdminLoggedIn(){
-
-  return localStorage.getItem(ADMIN_SESSION_KEY) === 'yes';
-}
-
-function updateAdminUI(){
-
-  if(isAdminLoggedIn()){
-
-    document.getElementById('adminPanel')
-      .classList.remove('hidden');
-
-    document.getElementById('logoutBtn')
-      .style.display = 'inline-block';
-
-    renderAdminList();
-  }
-}
-
-function saveChapter(){
-
-  const cls = document.getElementById('adminClass').value;
-
-  const subject = document.getElementById('adminSubject').value.trim();
-
-  const title = document.getElementById('chapterTitle').value.trim();
-
-  const link = document.getElementById('chapterLink').value.trim();
-
-  if(!subject || !title || !link){
-
-    alert('Please fill all fields');
-
-    return;
+  if(chapters.length === 0){
+    html += `<p>No chapters yet</p>`;
   }
 
-  const notes = getNotes();
-
-  if(!notes[cls][subject]){
-    notes[cls][subject] = [];
-  }
-
-  notes[cls][subject].push({
-    title,
-    file: link
+  chapters.forEach(ch => {
+    html += `
+      <div class="chapter">
+        <span>${ch.title}</span>
+        <button onclick="openPDF('${ch.file}')">Open</button>
+      </div>
+    `;
   });
 
-  saveNotesToStorage(notes);
-
-  selectedClass = Number(cls);
-  selectedSubject = subject;
-
-  document.getElementById('adminSubject').value = '';
-  document.getElementById('chapterTitle').value = '';
-  document.getElementById('chapterLink').value = '';
-
-  renderPage();
-  renderAdminList();
+  document.getElementById("content").innerHTML = html;
 }
 
-function renderAdminList(){
-
-  const notes = getNotes();
-
-  let html = '';
-
-  Object.keys(notes[selectedClass])
-    .forEach(subject => {
-
-      html += `
-        <h3 style="margin-top:20px">
-          ${subject}
-        </h3>
-      `;
-
-      notes[selectedClass][subject]
-        .forEach((item,index) => {
-
-          html += `
-            <div class="chapter-row">
-
-              <div class="chip">
-                Class ${selectedClass}
-              </div>
-
-              <div>
-                <strong>${item.title}</strong>
-              </div>
-
-              <div class="small">
-                ${item.file}
-              </div>
-
-              <button
-                class="btn danger"
-                onclick="deleteChapter('${subject}', ${index})">
-
-                Delete
-
-              </button>
-
-            </div>
-          `;
-        });
-    });
-
-  document.getElementById('adminChapterList').innerHTML = html;
+function openPDF(link){
+  document.getElementById("viewer").style.display = "block";
+  document.getElementById("pdf").src = link;
+  document.getElementById("content").style.display = "none";
 }
 
-function deleteChapter(subject,index){
-
-  const notes = getNotes();
-
-  notes[selectedClass][subject].splice(index,1);
-
-  saveNotesToStorage(notes);
-
-  renderPage();
-  renderAdminList();
+function closePDF(){
+  document.getElementById("viewer").style.display = "none";
+  document.getElementById("content").style.display = "block";
 }
 
-ensureData();
-updateAdminUI();
-showClass(6);
+goHome();
 
 </script>
 
