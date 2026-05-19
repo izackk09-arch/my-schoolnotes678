@@ -11,9 +11,7 @@ body{
   padding:20px;
 }
 
-h1{
-  text-align:center;
-}
+h1{text-align:center;}
 
 .grid{
   display:grid;
@@ -40,22 +38,12 @@ button{
   margin-top:10px;
 }
 
-.chapter{
-  background:#fff;
-  margin:10px 0;
-  padding:12px;
-  border-radius:10px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
 .back{
   background:#16a34a;
 }
 
-#viewer{
-  display:none;
+#loginBox{
+  margin-top:30px;
 }
 </style>
 </head>
@@ -64,112 +52,23 @@ button{
 
 <h1>📚 School Notes</h1>
 
-<button onclick="goHome()">Home</button>
-
 <div id="content"></div>
 
-<!-- PDF VIEWER -->
-<div id="viewer">
-  <button onclick="closePDF()">Close</button>
-  <iframe id="pdf" style="width:100%;height:80vh;border:none;"></iframe>
+<!-- 🔐 ADMIN LOGIN (ONLY HOME PAGE) -->
+<div id="loginBox">
+  <hr>
+
+  <h3>Admin Login</h3>
+
+  <input type="password" id="adminPass" placeholder="Enter admin password">
+  <button onclick="adminLogin()">Login</button>
 </div>
-
-<!-- 🔐 ADMIN LOGIN SECTION (FIXED LOCATION) -->
-<hr>
-
-<h3>Admin Login</h3>
-
-<input type="password" id="adminPass" placeholder="Enter admin password">
-<button onclick="adminLogin()">Login</button>
 
 <script>
 
-const KEY = "school_notes";
+const KEY = "school_notes_data_v5";
 
-function getData(){
-  return JSON.parse(localStorage.getItem(KEY)) || {
-    6:{English:[],Khasi:[],Maths:[],Science:[],Computer:[]},
-    7:{English:[],Khasi:[],Maths:[],Science:[],Computer:[]},
-    8:{English:[],Khasi:[],Maths:[],Science:[],Computer:[]}
-  };
-}
-
-function goHome(){
-
-  let html = `<div class="grid">`;
-
-  for(let c of [6,7,8]){
-    html += `
-      <div class="card">
-        <h2>Class ${c}</h2>
-        <button onclick="openClass(${c})">Open</button>
-      </div>
-    `;
-  }
-
-  html += `</div>`;
-
-  document.getElementById("content").innerHTML = html;
-}
-
-function openClass(c){
-
-  let data = getData();
-
-  let html = `<button class="back" onclick="goHome()">← Back</button><h2>Class ${c}</h2><div class="grid">`;
-
-  for(let subject in data[c]){
-
-    html += `
-      <div class="card">
-        <h3>${subject}</h3>
-        <button onclick="openSubject(${c},'${subject}')">Open</button>
-      </div>
-    `;
-  }
-
-  html += `</div>`;
-
-  document.getElementById("content").innerHTML = html;
-}
-
-function openSubject(c,subject){
-
-  let data = getData();
-
-  let chapters = data[c][subject];
-
-  let html = `<button class="back" onclick="openClass(${c})">← Back</button>
-  <h2>${subject}</h2>`;
-
-  if(chapters.length === 0){
-    html += `<p>No chapters yet</p>`;
-  }
-
-  chapters.forEach(ch => {
-    html += `
-      <div class="chapter">
-        <span>${ch.title}</span>
-        <button onclick="openPDF('${ch.file}')">Open</button>
-      </div>
-    `;
-  });
-
-  document.getElementById("content").innerHTML = html;
-}
-
-function openPDF(link){
-  document.getElementById("viewer").style.display = "block";
-  document.getElementById("pdf").src = link;
-  document.getElementById("content").style.display = "none";
-}
-
-function closePDF(){
-  document.getElementById("viewer").style.display = "none";
-  document.getElementById("content").style.display = "block";
-}
-
-/* 🔐 ADMIN LOGIN FUNCTION */
+/* 🔐 LOGIN */
 function adminLogin(){
   let pass = document.getElementById("adminPass").value;
 
@@ -181,6 +80,44 @@ function adminLogin(){
   }
 }
 
+/* 🏠 HOME */
+function goHome(){
+
+  document.getElementById("loginBox").style.display = "block";
+
+  document.getElementById("content").innerHTML = `
+    <div class="grid">
+      <div class="card">
+        <h2>Class 6</h2>
+        <button onclick="openClass(6)">Open</button>
+      </div>
+
+      <div class="card">
+        <h2>Class 7</h2>
+        <button onclick="openClass(7)">Open</button>
+      </div>
+
+      <div class="card">
+        <h2>Class 8</h2>
+        <button onclick="openClass(8)">Open</button>
+      </div>
+    </div>
+  `;
+}
+
+/* 📚 CLASS (NO SUBJECTS ANYMORE) */
+function openClass(c){
+
+  document.getElementById("loginBox").style.display = "none";
+
+  document.getElementById("content").innerHTML = `
+    <button class="back" onclick="goHome()">← Back</button>
+    <h2>Class ${c}</h2>
+    <p>No notes available yet</p>
+  `;
+}
+
+/* START */
 goHome();
 
 </script>
