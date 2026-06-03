@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html>
 <head>
 <meta charset="UTF-8">
-<title>School Notes</title>
-
-<style>
+<title>School Notes</title><style>
 
 body{
   font-family:Arial;
@@ -18,6 +15,8 @@ body{
 
 h1{
   text-align:center;
+  color:white;
+  text-shadow:2px 2px 5px black;
 }
 
 .grid{
@@ -45,10 +44,6 @@ button{
   margin-top:10px;
 }
 
-button:hover{
-  opacity:0.9;
-}
-
 .back{
   background:#16a34a;
 }
@@ -57,16 +52,7 @@ a{
   text-decoration:none;
 }
 
-</style>
-</head>
-
-<body>
-
-<h1>📚 School Notes</h1>
-
-<div id="content"></div>
-
-<script>
+</style></head><body><h1>📚 School Notes</h1><div id="content"></div><script>
 
 /* HOME PAGE */
 
@@ -77,33 +63,18 @@ document.getElementById("content").innerHTML = `
 <div class="grid">
 
 <div class="card">
-
 <h2>Class 6</h2>
-
-<button onclick="openClass6()">
-Open
-</button>
-
+<button onclick="openClass6()">Open</button>
 </div>
 
 <div class="card">
-
 <h2>Class 7</h2>
-
-<button onclick="openClass7()">
-Open
-</button>
-
+<button onclick="openClass7()">Open</button>
 </div>
 
 <div class="card">
-
 <h2>Class 8</h2>
-
-<button onclick="openClass8()">
-Open
-</button>
-
+<button onclick="openClass8()">Open</button>
 </div>
 
 </div>
@@ -118,44 +89,24 @@ function openClass6(){
 
 document.getElementById("content").innerHTML = `
 
-<button class="back" onclick="goHome()">
-← Back
-</button>
+<button class="back" onclick="goHome()">← Back</button>
 
 <h2>Class 6 - Computer</h2>
 
 <div class="grid">
 
 <div class="card">
-
 <h3>Chapter 1</h3>
-
-<a 
-href="./Notes/class6/computer/chapter1/chapter1.pdf"
-target="_blank">
-
-<button>
-Open PDF
-</button>
-
+<a href="./Notes/class6/computer/chapter1/chapter1.pdf" target="_blank">
+<button>Open PDF</button>
 </a>
-
 </div>
 
 <div class="card">
-
 <h3>Chapter 2</h3>
-
-<a 
-href="./Notes/class6/computer/chapter2/chapter2.pdf"
-target="_blank">
-
-<button>
-Open PDF
-</button>
-
+<a href="./Notes/class6/computer/chapter2/chapter2.pdf" target="_blank">
+<button>Open PDF</button>
 </a>
-
 </div>
 
 </div>
@@ -170,44 +121,24 @@ function openClass7(){
 
 document.getElementById("content").innerHTML = `
 
-<button class="back" onclick="goHome()">
-← Back
-</button>
+<button class="back" onclick="goHome()">← Back</button>
 
 <h2>Class 7 - Computer</h2>
 
 <div class="grid">
 
 <div class="card">
-
 <h3>Chapter 1</h3>
-
-<a 
-href="./Notes/class7/computer/chapter1/chapter1.pdf"
-target="_blank">
-
-<button>
-Open PDF
-</button>
-
+<a href="./Notes/class7/computer/chapter1/chapter1.pdf" target="_blank">
+<button>Open PDF</button>
 </a>
-
 </div>
 
 <div class="card">
-
 <h3>Chapter 2</h3>
-
-<a 
-href="./Notes/class7/computer/chapter2/chapter2.pdf"
-target="_blank">
-
-<button>
-Open PDF
-</button>
-
+<a href="./Notes/class7/computer/chapter2/chapter2.pdf" target="_blank">
+<button>Open PDF</button>
 </a>
-
 </div>
 
 </div>
@@ -215,50 +146,27 @@ Open PDF
 `;
 
 }
+
 /* CLASS 8 */
 
 function openClass8(){
 
 document.getElementById("content").innerHTML = `
 
-<button class="back" onclick="goHome()">
-← Back
-</button>
+<button class="back" onclick="goHome()">← Back</button>
 
-<h2>Class 8 - Computer</h2>
+<h2>Class 8</h2>
 
 <div class="grid">
 
 <div class="card">
-
-<h3>Chapter 1</h3>
-
-<a 
-href="./Notes/class8/computer/chapter1/chapter1.pdf"
-target="_blank">
-
-<button>
-Open PDF
-</button>
-
-</a>
-
+<h3>Computer</h3>
+<button onclick="openClass8Computer()">Open</button>
 </div>
 
 <div class="card">
-
-<h3>Chapter 2</h3>
-
-<a 
-href="./Notes/class8/computer/chapter2/Computer Ethics.pdf"
-target="_blank">
-
-<button>
-Open PDF
-</button>
-
-</a>
-
+<h3>General Knowledge</h3>
+<button onclick="openClass8GK()">Open</button>
 </div>
 
 </div>
@@ -267,11 +175,64 @@ Open PDF
 
 }
 
-/* START */
+/* CLASS 8 COMPUTER */
+
+function openClass8Computer(){
+
+document.getElementById("content").innerHTML = `
+
+<button class="back" onclick="openClass8()">← Back</button>
+
+<h2>Class 8 - Computer</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>Chapter 1</h3>
+<a href="./Notes/class8/computer/chapter1/chapter1.pdf" target="_blank">
+<button>Open PDF</button>
+</a>
+</div>
+
+<div class="card">
+<h3>Chapter 2</h3>
+<a href="./Notes/class8/computer/chapter2/Computer Ethics.pdf" target="_blank">
+<button>Open PDF</button>
+</a>
+</div>
+
+</div>
+
+`;
+
+}
+
+/* CLASS 8 GENERAL KNOWLEDGE */
+
+function openClass8GK(){
+
+document.getElementById("content").innerHTML = `
+
+<button class="back" onclick="openClass8()">← Back</button>
+
+<h2>Class 8 - General Knowledge</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>General Knowledge PDF</h3>
+<a href="./Notes/class8/general_knowledge/general_knowledge.pdf" target="_blank">
+<button>Open PDF</button>
+</a>
+</div>
+
+</div>
+
+`;
+
+}
 
 goHome();
 
-</script>
-
-</body>
+</script></body>
 </html>
